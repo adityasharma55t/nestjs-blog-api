@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import { AllExceptionsFilter } from './common/exceptions/filters/exception.filter';
+import config from './config/env.config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -15,7 +16,7 @@ async function bootstrap() {
       transform: true,
     }),
   );
-  const config = new DocumentBuilder()
+  const swaggerConfig = new DocumentBuilder()
     .setTitle('Nest Blogging API')
     .setDescription('API documentation')
     .setBasePath('/api/v1/')
@@ -23,9 +24,9 @@ async function bootstrap() {
     .addBearerAuth()
     .build();
 
-  const document = SwaggerModule.createDocument(app, config);
+  const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('api-docs', app, document);
 
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(config.PORT ?? 3000);
 }
 bootstrap();
